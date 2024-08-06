@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="cal.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="cal.js" defer></script>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>환율 계산기</h1>
+      <div class="con">
+        <div class="currency">
+          <p>Amount</p>
+          <select name="currency-one" id="currency-one">
+            <option value="USD" data-rate="1">USD</option>
+          </select>
+          <input type="number" id="amount-one" value="1" />
+        </div>
+        <div class="currency">
+          <p>Converted Amount</p>
+          <select name="currency-two" id="currency-two">
+            <option value="KRW" data-rate="1.3">KRW</option>
+          </select>
+          <input type="number" id="amount-two" value="1" disabled />
+        </div>
+        <button id="swap"><i class="fa-solid fa-repeat"></i></button>
+      </div>
+      <p id="rate">
+        <span>표시환율<br /></span>
+        <strong id="rateText"></strong>
+      </p>
+    </main>
+  </body>
+</html>
