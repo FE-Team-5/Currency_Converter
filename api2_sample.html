@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+    <title>Document</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+      .con {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      .currency {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      select,
+      input {
+        width: 60%;
+        padding: 1rem;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        padding: 0.5rem;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        background-color: #0056b3;
+        color: white;
+        cursor: pointer;
+        transform: translateX(-50%);
+      }
+      .button-container {
+        display: flex;
+        justify-content: center;
+      }
+      button:hover {
+        background-color: #0056b3;
+        color: white;
+      }
+      #rate {
+        font-size: 18px;
+        text-align: center;
+      }
+      #currency-one,
+      #currency-two {
+        color: navy;
+      }
+      .currency input {
+        background-color: gainsboro;
+      }
+      .amount {
+        color: #ccc;
+      }
+      .h2 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>환율계산기</h1>
+      <div class="con">
+        <div class="amount">amount</div>
+        <div class="currency">
+          <select name="currency-one" id="currency-one">
+            <!-- <option value="USD" data-rate="1" selected>USD</option> -->
+          </select>
+          <input type="number" id="amount-one" value="1" />
+        </div>
+        <div class="button-container">
+          <button id="swap"><i class="fa-solid fa-rotate"></i></button>
+        </div>
+        <div class="amount">converted amount</div>
+        <div class="currency">
+          <select name="currency-two" id="currency-two">
+            <!-- <option value="USD" data-rate="1" selected>KRW</option> -->
+          </select>
+          <input type="number" id="amount-two" value="1364.75" readonly />
+        </div>
+      </div>
+      <p class="h2"><strong>표시환율</strong></p>
+      <p id="rate"></p>
+    </main>
+  </body>
+  <script>
+    const currencyOne = document.getElementById("currency-one");
+    const currencyTwo = document.getElementById("currency-two");
+    const amountOne = document.getElementById("amount-one");
+    const amountTwo = document.getElementById("amount-two");
+    const rateEl = document.getElementById("rate");
+    const swap = document.getElementById("swap");
+    const url = "https://open.exchangerate-api.com/v6/latest";
+    let ratesData;
+
+    const fetchRate = async () => {
+      const res = await fetch(url);
+      const data = await res.json();
+      ratesData = data.rates;
+      const currencies = Object.keys(ratesData);
+
+      currencies.forEach((currency) => {
+        const optionOne = document.createElement("option");
+        optionOne.value = currency;
+        optionOne.innerHTML = currency;
+        currencyOne.appendChild(optionOne);
+
+        const optionTwo = document.createElement("option");
+        optionTwo.value = currency;
+        optionTwo.innerHTML = currency;
+        currencyTwo.appendChild(optionTwo);
+      });
+      currencyOne.value = "USD";
+      currencyTwo.value = "KRW";
+      calculate();
+    };
+    const calculate = () => {
+      const currencyOneValue = currencyOne.value;
+      const currencyTwoValue = currencyTwo.value;
+
+      const rate = ratesData[currencyTwoValue] / ratesData[currencyOneValue];
+      amountTwo.value = (amountOne.value * rate).toFixed(2);
+      rateEl.innerHTML = `1 ${currencyOneValue} = ${rate} ${currencyTwoValue}`;
+    };
+    currencyOne.addEventListener("change", calculate);
+    currencyTwo.addEventListener("change", calculate);
+    amountOne.addEventListener("input", calculate);
+    swap.addEventListener("click", () => {
+      const temp = currencyOne.value;
+      currencyOne.value = currencyTwo.value;
+      currencyTwo.value = temp;
+      calculate();
+    });
+    fetchRate();
+  </script>
+</html>
